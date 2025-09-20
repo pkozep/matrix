@@ -32,3 +32,8 @@ class Matrix:
 
     def transposition( self ):
         return Matrix( [ [ self.matrix[ i ][ j ] for i in range( self.m ) ] for j in range( self.n ) ] )
+
+    @staticmethod
+    def unit( order: int ):
+        return Matrix( [ [ int( i == j ) for j in range( order ) ] for i in range( order ) ] )
+    
