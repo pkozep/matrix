@@ -5,7 +5,7 @@ from itertools import permutations
 class Matrix:
     class Vector:
         def __init__( self, vec: list[int, ] ):
-            self.vec = vec
+            self.vec = [ round( el, 4 ) for el in vec ]
             self.n = len( vec )
 
         def __add__( self, other ):
@@ -57,6 +57,9 @@ class Matrix:
                         result_matrix[ -1 ].append( self.matr[ i ].vec[ j ] )
         return Matrix( result_matrix )
     
+    def _addition( self, pos: list[ int, int ] ):
+        return ( -1 )**( sum( pos ) ) * self._minor( pos ).determinant()
+    
     def determinant( self, methods: str="formula" ) -> int | float:
         if methods == "formula":
             return Matrix._det_formula( self.matr )
@@ -85,7 +88,7 @@ class Matrix:
             if obj.order == 1:
                 return obj.matr[ 0 ].vec[ 0 ]
             else:
-                return sum( ( -1 )**i * obj.matr[ i ].vec[ 0 ] * obj._minor( [ i, 0 ] ).determinant( "minors" ) for i in range( obj.order ) )
+                return sum( obj.matr[ i ].vec[ 0 ] * obj._addition( [ i, 0 ] ) for i in range( obj.order ) )
 
     @staticmethod
     def _det_gaus( matrix: list=[ list, ] ) -> int | float:
@@ -110,6 +113,10 @@ class Matrix:
                 if perm[ i ] > perm[ j ]:
                     inversions += 1
         return inversions
+
+    def reverse( self ):
+        det_A = self.determinant()
+        return Matrix( [ [ self._addition( [ i, j ] ) / det_A for j in range( self.order ) ] for i in range( self.order ) ] )._transposition()
 
     @staticmethod
     def unit( order: int ):
