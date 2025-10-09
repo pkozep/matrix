@@ -104,6 +104,10 @@ class Matrix:
 
                 return prod( [ obj.matr[ i ].vec[ i ] for i in range( obj.order ) ] ) 
 
+    def reverse( self ):
+        det_A = self.determinant()
+        return Matrix( [ [ self._addition( [ i, j ] ) / det_A for j in range( self.order ) ] for i in range( self.order ) ] )._transposition()
+
     @staticmethod
     def _invers( perm: list[ int, ] ):
         n = len( perm )
@@ -113,10 +117,6 @@ class Matrix:
                 if perm[ i ] > perm[ j ]:
                     inversions += 1
         return inversions
-
-    def reverse( self ):
-        det_A = self.determinant()
-        return Matrix( [ [ self._addition( [ i, j ] ) / det_A for j in range( self.order ) ] for i in range( self.order ) ] )._transposition()
 
     @staticmethod
     def unit( order: int ):
